@@ -14,7 +14,8 @@ namespace BatteryIcon
     // add rounded corners
     public partial class App : Application
     {
-        private bool open = false;
+        private static bool open = false;
+        private static bool notified = false;
         bool reportRequested = false;
         protected static Forms.NotifyIcon _notifyIcon = new Forms.NotifyIcon();
         private static Forms.PowerStatus _pwr = Forms.SystemInformation.PowerStatus;
@@ -45,12 +46,7 @@ namespace BatteryIcon
 
         private void OnStatusClicked(object sender, EventArgs e)
         {
-            new ToastContentBuilder()
-            .AddArgument("action", "viewConversation")
-            .AddArgument("conversationId", 9813)
-            .AddText("Low Battery")
-            .AddText("Battery charge is less than 20%")
-            .Show();
+
         }
 
         private void OnExitClicked(object sender, EventArgs e)
@@ -91,10 +87,6 @@ namespace BatteryIcon
                 }
 
             }
-            else
-            {
-                //do nothing....... right click is for context menu
-            }
 
 
         }
@@ -125,10 +117,24 @@ namespace BatteryIcon
             else if (Batterylife >= 25 && Batterylife <= 49)
             {
                 _notifyIcon.Icon = new Icon("Resources\\middle.ico");
+                if(notified == true)
+                {
+                    notified = false;
+                }
             }
             else if (Batterylife >= 16 && Batterylife <= 24)
             {
                 _notifyIcon.Icon = new Icon("Resources\\low.ico");
+                if (notified == false && (Batterylife >= 16 && Batterylife <= 20))
+                {
+                     new ToastContentBuilder()
+                    .AddArgument("action", "viewConversation")
+                    .AddArgument("conversationId", 9813)
+                    .AddText("Low Battery")
+                    .AddText("Battery charge is less than 20%")
+                    .Show();
+                    notified = true;
+                }
             }
             else if (Batterylife >= 15)
             {
@@ -151,7 +157,7 @@ namespace BatteryIcon
                 int mins = (int)(BatteryLifeRemaining % 60);
                 if (hrs == 0)
                 {
-                    _notifyIcon.Text = "(" + Batterylife.ToString() + "%" + ") remaining";
+                    _notifyIcon.Text = Batterylife.ToString() + "%" + " remaining";
                 }
                 else
                 {
