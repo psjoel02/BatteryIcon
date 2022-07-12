@@ -13,7 +13,7 @@
     <Grid>
         <Image Margin="2,10,269,177" 
                Source="Resources\high.ico"
-               Name="Icon"/>
+               Name="BatteryIcon"/>
 
         <TextBlock HorizontalAlignment="Left" 
                    Margin="73,14,0,0" 
@@ -22,18 +22,20 @@
                    Foreground="White" Height="50" Width="95"
                    FontSize="38"
                    FontFamily="segoeui"
-                   Name="Percent">
-                   <Run Text="100%"/><LineBreak/><Run/></TextBlock>
+                   Name="Percent"
+                   Text="100%">
+                </TextBlock>
 
         <TextBlock HorizontalAlignment="Left" 
-                   Margin="185,14,0,0" 
+                   Margin="165,16,0,0" 
                    TextWrapping="Wrap" 
                    VerticalAlignment="Top"
                    Foreground="Gray" Height="60" Width="155"
                    FontSize="16"
                    FontFamily="segoeui"
-                   Name="TimeRemaining">
-                   <Run Text="2 hours 55 minutes Remaining"/><LineBreak/><Run/></TextBlock>
+                   Name="TimeRemaining"
+                   Text="2 hours 55 minutes Remaining">
+                   </TextBlock>
 
         <TextBlock HorizontalAlignment="Center"
                    TextWrapping="Wrap" 
