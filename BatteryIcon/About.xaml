@@ -1,0 +1,102 @@
+﻿<Window x:Class="BatteryIcon.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BatteryIcon" xmlns:controls="clr-namespace:Windows.UI.Xaml.Controls;assembly=Windows.Foundation.UniversalApiContract"
+        mc:Ignorable="d"
+        Height="270" Width="350"
+        MinHeight="270"
+        MaxHeight="270"
+        MinWidth="350"
+        MaxWidth="350"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="Manual" 
+        Background="#202020"
+        LostFocus="Window_LostFocus"
+        Closing="Window_Closing">
+
+    <Grid>
+
+        <Image Margin="2,10,269,177" 
+               Source="Resources\battery.ico"
+               Name="BatteryIcon"/>
+
+        <Image Margin="42,184,58,9"
+               Source="Resources\license.jpg"/>
+
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="96,10,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Battery Icon" 
+                   FontSize="25"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="96,58,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Developer: Joel Pimenta" 
+                   FontSize="16"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="96,58,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Developer: Joel Pimenta" 
+                   FontSize="16"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                       Margin="10,103,0,0" 
+                       TextWrapping="Wrap" 
+                       VerticalAlignment="Top"
+                       Foreground="Gray" 
+                       Height="21" 
+                       Width="53"
+                       FontSize="16"
+                       FontFamily="segoeui"
+                       Name="Github">
+                        <Hyperlink Click="Github_Click">
+                            <Run Text="Github" />
+                        </Hyperlink>
+        </TextBlock>
+
+
+        <TextBlock HorizontalAlignment="Left" 
+                       Margin="10,144,0,0" 
+                       TextWrapping="Wrap" 
+                       VerticalAlignment="Top"
+                       Foreground="Gray" 
+                       Height="22" 
+                       Width="106"
+                       FontSize="16"
+                       FontFamily="segoeui"
+                       Name="RNotes">
+                        <Hyperlink Click="Release_Click">
+                            <Run Text="Release Notes" />
+                        </Hyperlink>
+        </TextBlock>
+
+        <CheckBox Content="Autostart with Windows" 
+                  HorizontalAlignment="Left" 
+                  Margin="175,106,0,0" 
+                  VerticalAlignment="Top"
+                  Foreground="White"
+                  FontFamily="segoeui"
+                  IsChecked="True"/>
+
+        <Button Content="Check for updates" 
+                HorizontalAlignment="Left" 
+                Margin="181,144,0,0" 
+                VerticalAlignment="Top"
+                FontFamily="segoeui"/>
+
+    </Grid>
+</Window>

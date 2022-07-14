@@ -1,10 +1,7 @@
 ﻿using System.Windows;
-using System.Drawing;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System;
-using System.Threading;
-using System.Windows.Threading;
 
 namespace BatteryIcon
 {
@@ -13,13 +10,15 @@ namespace BatteryIcon
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
+        private static int brightness;
+        private MainWindow battForm;
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        private void Settings_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("ms-settings:powersleep");
         }
@@ -46,19 +45,47 @@ namespace BatteryIcon
                 TimeRemaining.Text = s;
             });
         }
-        public TextBlock SetSliderDescription()
+        public void SetSliderDescription(string s)
         {
-            return this.FindName("SliderDescription") as TextBlock;
+            SliderDescription.Dispatcher.Invoke(() =>
+            {
+                SliderDescription.Text = s;
+            });
         }
 
-        public Slider SetPowerSlider()
+        public void Power_ValueChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
         {
-            return this.FindName("PowerSlider") as Slider;
+            //change windows power mode here
         }
 
-        public Slider SetBrightnessSlider()
+        private void Brightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            return this.FindName("BrightnessSlider") as Slider;
+            if (brightness != battForm.BrightnessSlider.Value)
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    Brightness.SetBrightness((int)battForm.BrightnessSlider.Value);
+                    brightness = (int)battForm.BrightnessSlider.Value;
+                    battForm.Bright_Percent.Text = brightness.ToString() + "%";
+                });
+            }
         }
+
+        public void receive(MainWindow form)
+        {
+            battForm = form;
+            this.Dispatcher.Invoke(() =>
+            {
+                brightness = Brightness.GetBrightness();
+                battForm.BrightnessSlider.Value = brightness;
+                battForm.Bright_Percent.Text = brightness.ToString() + "%";
+            });
+        }
+
+        private void Window_LostFocus(Object sender, EventArgs e)
+        {
+            battForm.Hide();
+        }
+
     }
 }

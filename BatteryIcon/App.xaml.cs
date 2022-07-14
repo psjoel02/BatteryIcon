@@ -2,28 +2,23 @@
 using System;
 using System.Drawing;
 using System.Windows;
-using System.Windows.Threading;
 using Forms = System.Windows.Forms;
 using Windows.Devices.Power;
-using Windows.UI.Core;
-using Microsoft.Win32;
-using System.Windows.Media.Imaging;
+using System.Windows.Media.Animation;
 
 namespace BatteryIcon
 {
-    // add rounded corners
     public partial class App : Application
     {
         private static bool open = false;
         private static bool notified = false;
-        bool reportRequested = false;
+        //bool reportRequested = false;
 
         protected static Forms.NotifyIcon _notifyIcon = new Forms.NotifyIcon();
         private static Forms.PowerStatus _pwr = Forms.SystemInformation.PowerStatus;
 
-        private MainWindow form = new MainWindow();
-        public MainWindow access = new MainWindow();
-        private Settings s = new Settings();
+        private MainWindow battForm = new MainWindow();
+        private About abForm = new About();
 
         public App()
         {
@@ -32,17 +27,17 @@ namespace BatteryIcon
         }
         protected override void OnStartup(StartupEventArgs e)
         {
-
-            //_notifyIcon.Icon = new Icon("Resources\\no_battery.ico");
             SetIcon(_pwr);
             SetText(_pwr);
 
             _notifyIcon.MouseClick += notifyIcon_MouseClick;
 
             _notifyIcon.ContextMenu = new Forms.ContextMenu();
+            //to-do: make context menu dark theme
+            _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("About", OnSettingsClicked));
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Power", OnPowerClicked));
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Settings", OnSettingsClicked));
-            _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Battery Status", OnSettingsClicked));
+            _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Battery Status", OnStatusClicked));
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Exit", OnExitClicked));
             _notifyIcon.Visible = true;
 
@@ -60,15 +55,16 @@ namespace BatteryIcon
 
         private void OnSettingsClicked(object sender, EventArgs e)
         {
-            //display Github page, release notes, license and check for updates
             //allow user to change between number and percentage icon, autostart with windows, and dark/light theme
             //along with Battery Icon (name), Taskbar icon, version number, and author 2022
             //user should be able to check for updates and uninstall application
-            s.Left = SystemParameters.WorkArea.Width - 350 - 2;
-            s.Top = SystemParameters.WorkArea.Height - 250 - 2;
+            abForm.Left = SystemParameters.WorkArea.Width - 350 - 2;
+            abForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
             //form.SetDesktopLocation(MousePosition.X - form.Width / 2, MousePosition.Y - form.Height - 20);
-            s.Show();
-            s.Activate();
+            abForm.Show();
+            abForm.Activate();
+            abWindowOpened();
+            sendAObj(abForm);
         }
 
         private void OnStatusClicked(object sender, EventArgs e)
@@ -96,17 +92,26 @@ namespace BatteryIcon
                 {
 
                     open = true;
-                    form.Left = SystemParameters.WorkArea.Width - 350 - 2;
-                    form.Top = SystemParameters.WorkArea.Height - 250 - 2;
+
+                    battForm.Left = SystemParameters.WorkArea.Width - 350 - 2;
+                    battForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
+                    battForm.ShowInTaskbar = false;
                     //form.SetDesktopLocation(MousePosition.X - form.Width / 2, MousePosition.Y - form.Height - 20);
-                    form.Show();
-                    form.Activate();
+                    battForm.Show();
+                    battForm.Activate();
+                    battWindow_Opened();
+                    sendMObj(battForm);
+
                     //form.TopMost = true;
                 }
                 else
                 {
                     open = false;
-                    form.Hide();
+                    battForm.Hide();
+                    if (abForm.IsActive)
+                    {
+                        abForm.Hide();
+                    }
                 }
 
             }
@@ -119,71 +124,97 @@ namespace BatteryIcon
         {
 
             Double BatteryLifeRemaining = Math.Round(_pwr.BatteryLifeRemaining / 60.0);
-            Double Batterylife = Math.Round(_pwr.BatteryLifePercent * 100);
+            int Batterylife = (int)(_pwr.BatteryLifePercent * 100);
 
             if (_pwr.PowerLineStatus == Forms.PowerLineStatus.Unknown)
             {
                 _notifyIcon.Icon = new Icon("Resources\\no_battery.ico");
-                form.SetIcon("Resources\\no_battery.ico");
+                battForm.SetIcon("Resources\\no_battery.ico");
             }
             else if (_pwr.PowerLineStatus == Forms.PowerLineStatus.Online)
             {
                 _notifyIcon.Icon = new Icon("Resources\\charging.ico");
-                form.SetIcon("Resources\\charging.ico");
-                
+                battForm.SetIcon("Resources\\charging.ico");
             }
-            else if (Batterylife >= 80 && Batterylife <= 100)
+            else
             {
-                _notifyIcon.Icon = new Icon("Resources\\high.ico");
-                form.SetIcon("Resources\\high.ico");
-            }
-            else if (Batterylife >= 50 && Batterylife <= 79)
-            {
-                _notifyIcon.Icon = new Icon("Resources\\mid.ico");
-                form.SetIcon("Resources\\mid.ico");
-            }
-            else if (Batterylife >= 25 && Batterylife <= 49)
-            {
-                _notifyIcon.Icon = new Icon("Resources\\middle.ico");
-                form.SetIcon("Resources\\middle.ico");
-                if (notified == true)
+                switch (Batterylife)
                 {
-                    notified = false;
-                }
-            }
-            else if (Batterylife >= 16 && Batterylife <= 24)
-            {
-                _notifyIcon.Icon = new Icon("Resources\\low.ico");
-                form.SetIcon("Resources\\low.ico");
+                    case int val when (val >= 98):
+                        _notifyIcon.Icon = new Icon("Resources\\full.ico");
+                        battForm.SetIcon("Resources\\full.ico");
+                        break;
 
-                if (notified == false && (Batterylife >= 16 && Batterylife <= 20))
-                {
-                     new ToastContentBuilder()
-                    .AddArgument("action", "viewConversation")
-                    .AddArgument("conversationId", 9813)
-                    .AddText("Low Battery")
-                    .AddText("Battery charge is less than 20%")
-                    .Show();
-                    notified = true;
+                    case int val when (val >= 80 && val <= 97):
+                        _notifyIcon.Icon = new Icon("Resources\\high.ico");
+                        battForm.SetIcon("Resources\\high.ico");
+                        break;
+
+                    case int val when (val >= 80 && val <= 97):
+                        _notifyIcon.Icon = new Icon("Resources\\high.ico");
+                        battForm.SetIcon("Resources\\high.ico");
+                        break;
+
+                    case int val when (val >= 50 && val <= 79):
+                        _notifyIcon.Icon = new Icon("Resources\\mid.ico");
+                        battForm.SetIcon("Resources\\mid.ico");
+                        break;
+
+                    case int val when (val >= 25 && val <= 49):
+                        _notifyIcon.Icon = new Icon("Resources\\middle.ico");
+                        battForm.SetIcon("Resources\\middle.ico");
+                        if (notified == true)
+                        {
+                            notified = false;
+                        }
+                        break;
+
+                    case int val when (val >= 16 && val <= 24):
+                        _notifyIcon.Icon = new Icon("Resources\\low.ico");
+                        battForm.SetIcon("Resources\\low.ico");
+
+                        if (notified == false && (Batterylife >= 16 && Batterylife <= 20))
+                        {
+                            new ToastContentBuilder()
+                           .AddArgument("action", "viewConversation")
+                           .AddArgument("conversationId", 9813)
+                           .AddText("Low Battery")
+                           .AddText("Battery charge is less than 20%")
+                           .Show();
+                            notified = true;
+                        }
+                        break;
+
+                    case int val when (val >= 6 && val <= 15):
+                        _notifyIcon.Icon = new Icon("Resources\\medium_low.ico");
+                        battForm.SetIcon("Resources\\medium_low.ico");
+                        break;
+
+                    case int val when (val <= 5):
+                        _notifyIcon.Icon = new Icon("Resources\\very_low.ico");
+                        battForm.SetIcon("Resources\\very_low.ico");
+                        break;
+
+                    default:
+                        _notifyIcon.Icon = new Icon("Resources\\no_battery.ico");
+                        battForm.SetIcon("Resources\\no_battery.ico");
+                        break;
                 }
             }
-            else if (Batterylife >= 15)
-            {
-                _notifyIcon.Icon = new Icon("Resources\\verylow.ico");
-                form.SetIcon("Resources\\verylow.ico");
-            }
+           
+
         }
 
         public void SetText(Forms.PowerStatus _pwr)
         {
             Double BatteryLifeRemaining = Math.Round(_pwr.BatteryLifeRemaining / 60.0);
-            Double Batterylife = Math.Round(_pwr.BatteryLifePercent * 100);
-            form.SetPercent(Batterylife.ToString() + "%");
+            Double Batterylife = (int)(_pwr.BatteryLifePercent * 100);
+            battForm.SetPercent(Batterylife.ToString() + "%");
 
             if (_pwr.PowerLineStatus == Forms.PowerLineStatus.Online)
             {
                 _notifyIcon.Text = Batterylife.ToString() + "% available (plugged in)";
-                form.SetTimeRemaining(Batterylife.ToString() + "% available (plugged in)");
+                battForm.SetTimeRemaining(Batterylife.ToString() + "% available (plugged in)");
             }
             else
             {
@@ -192,12 +223,12 @@ namespace BatteryIcon
                 if (hrs == 0)
                 {
                     _notifyIcon.Text = Batterylife.ToString() + "%" + " remaining";
-                    form.SetTimeRemaining(Batterylife.ToString() + "%" + " remaining");
+                    battForm.SetTimeRemaining(Batterylife.ToString() + "%" + " remaining");
                 }
                 else
                 {
                     _notifyIcon.Text = $"{hrs} hr {mins} min " + " " + "(" + Batterylife.ToString() + "%" + ") remaining";
-                    form.SetTimeRemaining($"{hrs} hr {mins} min " + " " + "(" + Batterylife.ToString() + "%" + ") remaining");
+                    battForm.SetTimeRemaining($"{hrs} hr {mins} min " + " " + "(" + Batterylife.ToString() + "%" + ") remaining");
                 }
             }
         }
@@ -220,8 +251,36 @@ namespace BatteryIcon
 
             SetIcon(_pwr);
             SetText(_pwr);
+            sendMObj(battForm);
+            /*TextBlock txt3 = new TextBlock { Text = "Charge rate (mW): " + report.ChargeRateInMilliwatts.ToString() };
+            TextBlock txt4 = new TextBlock { Text = "Design energy capacity (mWh): " + report.DesignCapacityInMilliwattHours.ToString() };
+            TextBlock txt5 = new TextBlock { Text = "Fully-charged energy capacity (mWh): " + report.FullChargeCapacityInMilliwattHours.ToString() };
+            TextBlock txt6 = new TextBlock { Text = "Remaining energy capacity (mWh): " + report.RemainingCapacityInMilliwattHours.ToString() };*/
 
         }
 
+        private void battWindow_Opened()
+        {
+            DoubleAnimation animation = new DoubleAnimation(0, 1,
+                                        (Duration)TimeSpan.FromSeconds(0.15));
+            battForm.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
+        private void abWindowOpened()
+        {
+            DoubleAnimation animation = new DoubleAnimation(0, 1,
+                                        (Duration)TimeSpan.FromSeconds(0.10));
+            abForm.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
+        public void sendMObj(MainWindow battForm)
+        {
+            battForm.receive(battForm);
+        }
+
+        public void sendAObj(About abForm)
+        {
+            abForm.receive(abForm);
+        }
     }
 }
