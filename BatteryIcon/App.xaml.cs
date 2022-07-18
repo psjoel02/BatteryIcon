@@ -5,6 +5,7 @@ using System.Windows;
 using Forms = System.Windows.Forms;
 using Windows.Devices.Power;
 using System.Windows.Media.Animation;
+using System.Runtime.InteropServices;
 
 namespace BatteryIcon
 {
@@ -13,12 +14,14 @@ namespace BatteryIcon
         private static bool open = false;
         private static bool notified = false;
         //bool reportRequested = false;
+        //developed exclusively for Windows 11 x64 platform
 
         protected static Forms.NotifyIcon _notifyIcon = new Forms.NotifyIcon();
         private static Forms.PowerStatus _pwr = Forms.SystemInformation.PowerStatus;
 
         private MainWindow battForm = new MainWindow();
         private About abForm = new About();
+
 
         public App()
         {
@@ -29,7 +32,8 @@ namespace BatteryIcon
         {
             SetIcon(_pwr);
             SetText(_pwr);
-
+            sendMObj(battForm);
+            sendAObj(abForm);
             _notifyIcon.MouseClick += notifyIcon_MouseClick;
 
             _notifyIcon.ContextMenu = new Forms.ContextMenu();
@@ -56,8 +60,8 @@ namespace BatteryIcon
         private void OnSettingsClicked(object sender, EventArgs e)
         {
             //allow user to change between number and percentage icon, autostart with windows, and dark/light theme
-            //along with Battery Icon (name), Taskbar icon, version number, and author 2022
             //user should be able to check for updates and uninstall application
+
             abForm.Left = SystemParameters.WorkArea.Width - 350 - 2;
             abForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
             //form.SetDesktopLocation(MousePosition.X - form.Width / 2, MousePosition.Y - form.Height - 20);
@@ -72,8 +76,12 @@ namespace BatteryIcon
             //battery type, wear level, power state, designed and fully charged capacity
             //current capacity, battery voltage, charge/discharge rate, current power source, 
             //battery charge, and remaining battery lifetime
-            SetIcon(_pwr);
-            SetText(_pwr);
+
+            /*Note — Using an undocumented API is unsupported by Microsoft. 
+             * This method may break in future Windows releases.
+             * This is an experimental project not meant for widespread usage.*/
+
+
         }
 
         private void OnPowerClicked(object sender, EventArgs e)
@@ -215,6 +223,21 @@ namespace BatteryIcon
             {
                 _notifyIcon.Text = Batterylife.ToString() + "% available (plugged in)";
                 battForm.SetTimeRemaining(Batterylife.ToString() + "% available (plugged in)");
+                this.Dispatcher.Invoke(() =>
+                {
+                    if (battForm.PowerSlider.Value == 240)
+                    {
+                        battForm.SliderDescription.Text = "Power mode (plugged in): Best performance";
+                    }
+                    else if (battForm.PowerSlider.Value == 160)
+                    {
+                        battForm.SliderDescription.Text = "Power mode (plugged in): Better performance";
+                    }
+                    else
+                    {
+                        battForm.SliderDescription.Text = "Power mode (plugged in): Better battery";
+                    }
+                });
             }
             else
             {
@@ -230,6 +253,26 @@ namespace BatteryIcon
                     _notifyIcon.Text = $"{hrs} hr {mins} min " + " " + "(" + Batterylife.ToString() + "%" + ") remaining";
                     battForm.SetTimeRemaining($"{hrs} hr {mins} min " + " " + "(" + Batterylife.ToString() + "%" + ") remaining");
                 }
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    if (battForm.PowerSlider.Value == 240)
+                    {
+                        battForm.SliderDescription.Text = "Power mode (on battery): Best performance";
+                    }
+                    else if (battForm.PowerSlider.Value == 160)
+                    {
+                        battForm.SliderDescription.Text = "Power mode (on battery): Better performance";
+                    }
+                    else if (battForm.PowerSlider.Value == 80)
+                    {
+                        battForm.SliderDescription.Text = "Power mode (on battery): Better battery";
+                    }
+                    else
+                    {
+                        battForm.SliderDescription.Text = "Power mode (on battery): Battery saver";
+                    }
+                });
             }
         }
 
@@ -252,6 +295,7 @@ namespace BatteryIcon
             SetIcon(_pwr);
             SetText(_pwr);
             sendMObj(battForm);
+            sendAObj(abForm);
             /*TextBlock txt3 = new TextBlock { Text = "Charge rate (mW): " + report.ChargeRateInMilliwatts.ToString() };
             TextBlock txt4 = new TextBlock { Text = "Design energy capacity (mWh): " + report.DesignCapacityInMilliwattHours.ToString() };
             TextBlock txt5 = new TextBlock { Text = "Fully-charged energy capacity (mWh): " + report.FullChargeCapacityInMilliwattHours.ToString() };

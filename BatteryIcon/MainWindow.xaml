@@ -11,8 +11,7 @@
         MinHeight="270"
         MaxHeight="270"
         MinWidth="350"
-        MaxWidth="350"
-        LostFocus="Window_LostFocus">
+        MaxWidth="350">
 
     <Border CornerRadius="5" Background="#202020">
         <Grid>
@@ -57,24 +56,32 @@
             <Slider HorizontalAlignment="Left" 
                 VerticalAlignment="Top" 
                 Width="224"
-                IsSnapToTickEnabled="True"
-                Minimum="0" Maximum="240"
+                Minimum="0" 
+                Maximum="240"
                 Ticks="0,80,160,240"
                 Name="PowerSlider" 
-                RenderTransformOrigin="0.5,-1.035"
-                Value="240" Margin="54,131,0,0"/>
+                TickPlacement="BottomRight"
+                Value="0" 
+                ValueChanged="PowerSlider_ValueChanged"
+                IsSnapToTickEnabled="True"
+                TickFrequency="80"
+                Margin="54,131,0,0"/>
 
             <Slider HorizontalAlignment="Left" 
-                Margin="64,186,0,0" 
+                Margin="50,182,0,0" 
                 VerticalAlignment="Top" 
-                Width="204"
+                Width="237"
                 Name="BrightnessSlider"
                 Minimum="0"
                 Maximum="100"
                 Value="0"
+                SmallChange="1"
+                LargeChange="10"
+                TickPlacement="BottomRight"
                 ValueChanged="Brightness_ValueChanged"
                 IsSnapToTickEnabled="True"
-                TickFrequency="1"/>
+                TickFrequency="10"
+                Height="30"/>
 
 
             <TextBlock HorizontalAlignment="Left" 
@@ -94,7 +101,7 @@
             </TextBlock>
 
             <TextBlock HorizontalAlignment="Left" 
-            Margin="280,184,0,0" 
+            Margin="292,182,0,0" 
             TextWrapping="Wrap" 
             VerticalAlignment="Top"
             Foreground="White" Height="30" Width="52"

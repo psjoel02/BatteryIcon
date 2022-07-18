@@ -13,7 +13,6 @@
         WindowStyle="ToolWindow"
         WindowStartupLocation="Manual" 
         Background="#202020"
-        LostFocus="Window_LostFocus"
         Closing="Window_Closing">
 
     <Grid>
@@ -22,7 +21,7 @@
                Source="Resources\battery.ico"
                Name="BatteryIcon"/>
 
-        <Image Margin="42,184,58,9"
+        <Image Margin="37,90,63,103"
                Source="Resources\license.jpg"/>
 
 
@@ -36,7 +35,7 @@
                    Foreground="White"/>
 
         <TextBlock HorizontalAlignment="Left" 
-                   Margin="96,58,0,0" 
+                   Margin="96,51,0,0" 
                    TextWrapping="Wrap"
                    Text="Developer: Joel Pimenta" 
                    FontSize="16"
@@ -45,21 +44,21 @@
                    Foreground="White"/>
 
         <TextBlock HorizontalAlignment="Left" 
-                   Margin="96,58,0,0" 
+                   Margin="19,200,0,0" 
                    TextWrapping="Wrap"
-                   Text="Developer: Joel Pimenta" 
+                   Text="Thank you for trying out this application." 
                    FontSize="16"
                    FontFamily="segoeui"
                    VerticalAlignment="Top"
                    Foreground="White"/>
 
         <TextBlock HorizontalAlignment="Left" 
-                       Margin="10,103,0,0" 
+                       Margin="42,160,0,0" 
                        TextWrapping="Wrap" 
                        VerticalAlignment="Top"
                        Foreground="Gray" 
                        Height="21" 
-                       Width="53"
+                       Width="52"
                        FontSize="16"
                        FontFamily="segoeui"
                        Name="Github">
@@ -70,7 +69,7 @@
 
 
         <TextBlock HorizontalAlignment="Left" 
-                       Margin="10,144,0,0" 
+                       Margin="181,160,0,0" 
                        TextWrapping="Wrap" 
                        VerticalAlignment="Top"
                        Foreground="Gray" 
@@ -83,20 +82,6 @@
                             <Run Text="Release Notes" />
                         </Hyperlink>
         </TextBlock>
-
-        <CheckBox Content="Autostart with Windows" 
-                  HorizontalAlignment="Left" 
-                  Margin="175,106,0,0" 
-                  VerticalAlignment="Top"
-                  Foreground="White"
-                  FontFamily="segoeui"
-                  IsChecked="True"/>
-
-        <Button Content="Check for updates" 
-                HorizontalAlignment="Left" 
-                Margin="181,144,0,0" 
-                VerticalAlignment="Top"
-                FontFamily="segoeui"/>
 
     </Grid>
 </Window>

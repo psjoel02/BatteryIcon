@@ -52,6 +52,7 @@ namespace BatteryIcon
         {
             abForm.Hide();
         }
+        //LostFocus="Window_LostFocus"
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
