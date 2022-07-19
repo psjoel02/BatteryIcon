@@ -1,8 +1,11 @@
-﻿using System.Windows;
-using System.Windows.Media.Imaging;
-using System;
+﻿using System;
+using System.Drawing;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using System.Runtime.InteropServices;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BatteryIcon
 {
@@ -15,6 +18,7 @@ namespace BatteryIcon
         private static int brightness;
         private static PowerStatus _pwr = SystemInformation.PowerStatus;
         private MainWindow battForm;
+        System.Windows.Threading.DispatcherTimer _timer;
 
         public static Guid BestPerformance = new Guid("ded574b5-45a0-4f42-8737-46345c09c238");
         public static Guid BetterPerformance = new Guid("00000000-0000-0000-0000-000000000000");
@@ -26,22 +30,32 @@ namespace BatteryIcon
 
         [DllImportAttribute("powrprof.dll", EntryPoint = "PowerGetEffectiveOverlayScheme")]
         public static extern uint PowerGetEffectiveOverlayScheme(out Guid EffectiveOverlayGuid);
+        //set GUIDs for power modes and import powrprof.dll methods using Pinvoke
 
         public MainWindow()
         {
             InitializeComponent();
+            _timer = new System.Windows.Threading.DispatcherTimer();
+            _timer.Tick += timer_Tick;
+            _timer.Interval = new TimeSpan(0, 0, 0, 0, 5); 
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("ms-settings:powersleep");
+            //if settings is clicked in the main window, open Window Settings for Power
         }
 
         public void SetIcon(string s)
         {
             BatteryIcon.Dispatcher.Invoke(() =>
             {
-                BatteryIcon.Source = new BitmapImage(new Uri(@s, UriKind.Relative));
+                ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
+                new Icon($"{s}").Handle,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+                BatteryIcon.Source = imageSource;
+                //create icon for main menu
             });
         }
         public void SetPercent(string s)
@@ -49,6 +63,7 @@ namespace BatteryIcon
             Percent.Dispatcher.Invoke(() =>
             {
                 Percent.Text = s;
+                //set text for percent in main menu
             });
         }
 
@@ -57,6 +72,7 @@ namespace BatteryIcon
             TimeRemaining.Dispatcher.Invoke(() =>
             { 
                 TimeRemaining.Text = s;
+                //set text for time remaining in main menu
             });
         }
         public void SetSliderDescription(string s)
@@ -64,15 +80,18 @@ namespace BatteryIcon
             SliderDescription.Dispatcher.Invoke(() =>
             {
                 SliderDescription.Text = s;
+                //set slider description to match Windows 10's text
             });
         }
 
         public void PowerSlider_ValueChanged(Object sender, EventArgs e)
         {
 
-                if (_pwr.PowerLineStatus == System.Windows.Forms.PowerLineStatus.Online)
+            if (_pwr.PowerLineStatus == System.Windows.Forms.PowerLineStatus.Online)
+            {
+                try
                 {
-                    this.Dispatcher.Invoke(() =>
+                    Dispatcher.Invoke(() =>
                     {
                         if (battForm.PowerSlider.Value == 240)
                         {
@@ -89,9 +108,19 @@ namespace BatteryIcon
                             battForm.SliderDescription.Text = "Power mode (plugged in): Better battery";
                             PowerSetActiveOverlayScheme(BetterBattery);
                         }
+                        //update UI when value is changed and apply new power mode on AC power
                     });
                 }
-                else
+                catch (AccessViolationException)
+                {
+                    Environment.Exit(0);
+                    throw;
+                    //catch if used on non x64 systems and exit application
+                }
+            }
+            else
+            {
+                try
                 {
                     this.Dispatcher.Invoke(() =>
                     {
@@ -105,7 +134,7 @@ namespace BatteryIcon
                             battForm.SliderDescription.Text = "Power mode (on battery): Better performance";
                             PowerSetActiveOverlayScheme(BetterPerformance);
                         }
-                        else if(battForm.PowerSlider.Value == 80)
+                        else if (battForm.PowerSlider.Value == 80)
                         {
                             battForm.SliderDescription.Text = "Power mode (on battery): Better battery";
                             PowerSetActiveOverlayScheme(BetterBattery);
@@ -115,19 +144,35 @@ namespace BatteryIcon
                             battForm.SliderDescription.Text = "Power mode (on battery): Battery saver";
                             PowerSetActiveOverlayScheme(BatterySaver);
                         }
+                        //update UI when value is changed and apply new power mode on DC power
                     });
                 }
+                catch (AccessViolationException)
+                {
+                    Environment.Exit(0);
+                    throw;
+                    //catch if used on non x64 systems and exit application
+                }
+            }
         }
 
         private void Brightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            _timer.Start();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            _timer.Stop();
             if (brightness != battForm.BrightnessSlider.Value)
             {
-                this.Dispatcher.Invoke(() =>
+                BrightnessSlider.Dispatcher.Invoke(() =>
                 {
                     Brightness.SetBrightness((int)battForm.BrightnessSlider.Value);
                     brightness = (int)battForm.BrightnessSlider.Value;
                     battForm.Bright_Percent.Text = brightness.ToString() + "%";
+                    //if main window's field brightness is not equal to the window's brightness,
+                    //change it and update the UI
                 });
             }
         }
@@ -160,10 +205,9 @@ namespace BatteryIcon
                 }
                 battForm.BrightnessSlider.Value = brightness;
                 battForm.Bright_Percent.Text = brightness.ToString() + "%";
+                //receive MainWindow Object and set initial slider positions and text fields
             });
         }
-
-        //LostFocus="Window_LostFocus"
 
     }
 }

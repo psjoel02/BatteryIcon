@@ -1,0 +1,153 @@
+﻿<Window x:Class="BatteryIcon.Status"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BatteryIcon"
+        mc:Ignorable="d"
+        Height="270" 
+        Width="350"
+        MinHeight="270"
+        MaxHeight="270"
+        MinWidth="350"
+        MaxWidth="350"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="Manual" 
+        Background="#202020"
+        Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="10,10,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Battery Properties" 
+                   FontSize="18"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   FontWeight="Bold"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="16,46,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Power State" 
+                   FontSize="15"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   FontWeight="Bold"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="21,75,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Discharging" 
+                   FontSize="13"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   Name="PowerState"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="16,108,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Wear Level" 
+                   FontSize="15"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   FontWeight="Bold"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="21,139,0,0" 
+                   TextWrapping="Wrap"
+                   Text="0%" 
+                   FontSize="13"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   Name="WearLevel"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="165,46,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Design Capacity" 
+                   FontSize="15"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   FontWeight="Bold"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="175,75,0,0" 
+                   TextWrapping="Wrap"
+                   Text="86000 mWh" 
+                   FontSize="13"
+                   FontFamily="segoeui"
+                   VerticalAlignment="Top"
+                   Foreground="White"
+                   Name="DesignCapacity"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+                   Margin="165,108,0,0" 
+                   TextWrapping="Wrap"
+                   Text="Fully Charged Capacity" 
+                   FontSize="15"
+                   FontFamily="segoeui"
+                   FontWeight="Bold"
+                   VerticalAlignment="Top"
+                   Foreground="White" Width="175"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+            Margin="175,139,0,0" 
+            TextWrapping="Wrap"
+            Text="80000 mWh" 
+            FontSize="13"
+            FontFamily="segoeui"
+            VerticalAlignment="Top"
+            Foreground="White"
+            Name="FullyChargedCapacity"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+            Margin="16,166,0,0" 
+            TextWrapping="Wrap"
+            Text="Charge/Discharge Rate" 
+            FontSize="15"
+            FontFamily="segoeui"
+            VerticalAlignment="Top"
+            Foreground="White"
+            FontWeight="Bold" Height="32" Width="128"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+            Margin="18,210,0,0" 
+            TextWrapping="Wrap"
+            Text="12000 mW" 
+            FontSize="13"
+            FontFamily="segoeui"
+            VerticalAlignment="Top"
+            Foreground="White"
+            Name="Rate"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+            Margin="165,166,0,0" 
+            TextWrapping="Wrap"
+            Text="Current Capacity" 
+            FontSize="15"
+            FontFamily="segoeui"
+            FontWeight="Bold"
+            VerticalAlignment="Top"
+            Foreground="White" Width="165"/>
+
+        <TextBlock HorizontalAlignment="Left" 
+            Margin="175,210,0,0" 
+            TextWrapping="Wrap"
+            Text="56000 mWh" 
+            FontSize="13"
+            FontFamily="segoeui"
+            VerticalAlignment="Top"
+            Foreground="White"
+            Name="CurrentCapacity"/>
+
+    </Grid>
+</Window>

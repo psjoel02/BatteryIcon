@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BatteryIcon" xmlns:controls="clr-namespace:Windows.UI.Xaml.Controls;assembly=Windows.Foundation.UniversalApiContract"
         mc:Ignorable="d"
-        Height="270" Width="350"
+        Height="270" 
+        Width="350"
         MinHeight="270"
         MaxHeight="270"
         MinWidth="350"
@@ -32,7 +33,8 @@
                    FontSize="25"
                    FontFamily="segoeui"
                    VerticalAlignment="Top"
-                   Foreground="White"/>
+                   Foreground="White"
+                   FontWeight="Bold"/>
 
         <TextBlock HorizontalAlignment="Left" 
                    Margin="96,51,0,0" 
@@ -44,9 +46,9 @@
                    Foreground="White"/>
 
         <TextBlock HorizontalAlignment="Left" 
-                   Margin="19,200,0,0" 
+                   Margin="40,196,0,0" 
                    TextWrapping="Wrap"
-                   Text="Thank you for trying out this application." 
+                   Text="Thank you for using this application." 
                    FontSize="16"
                    FontFamily="segoeui"
                    VerticalAlignment="Top"
@@ -61,6 +63,7 @@
                        Width="52"
                        FontSize="16"
                        FontFamily="segoeui"
+                       FontWeight="Bold"
                        Name="Github">
                         <Hyperlink Click="Github_Click">
                             <Run Text="Github" />
@@ -77,6 +80,7 @@
                        Width="106"
                        FontSize="16"
                        FontFamily="segoeui"
+                       FontWeight="Bold"
                        Name="RNotes">
                         <Hyperlink Click="Release_Click">
                             <Run Text="Release Notes" />

@@ -16,7 +16,7 @@
     <Border CornerRadius="5" Background="#202020">
         <Grid>
             <Image Margin="14,6,257,179" 
-               Source="Resources\high.ico"
+               Source="Resources\\high.ico"
                Name="BatteryIcon"/>
 
             <TextBlock HorizontalAlignment="Left" 
@@ -64,6 +64,7 @@
                 Value="0" 
                 ValueChanged="PowerSlider_ValueChanged"
                 IsSnapToTickEnabled="True"
+                IsMoveToPointEnabled="True"
                 TickFrequency="80"
                 Margin="54,131,0,0"/>
 
@@ -79,7 +80,8 @@
                 LargeChange="10"
                 TickPlacement="BottomRight"
                 ValueChanged="Brightness_ValueChanged"
-                IsSnapToTickEnabled="True"
+                IsSnapToTickEnabled="False"
+                IsMoveToPointEnabled="True"
                 TickFrequency="10"
                 Height="30"/>
 
@@ -128,7 +130,7 @@
                 Width="30"
                 Margin="292,126,0,0" 
                 VerticalAlignment="Top"
-                Source="/Resources/performance.ico"/>
+                Source="Resources\performance.ico"/>
 
 
 
