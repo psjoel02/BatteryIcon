@@ -36,3 +36,4 @@ namespace BatteryIcon
 
     }
 }
+//credit for methods using the WMI here: https://stackoverflow.com/questions/4013622/adjust-screen-brightness-using-c-sharp
