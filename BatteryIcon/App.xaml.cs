@@ -2,9 +2,9 @@
 using System;
 using System.Drawing;
 using System.Windows;
-using System.Windows.Media.Animation;
 using Forms = System.Windows.Forms;
 using Windows.Devices.Power;
+using System.Diagnostics;
 
 namespace BatteryIcon
 {
@@ -25,7 +25,6 @@ namespace BatteryIcon
         public App()
         {
             Battery.AggregateBattery.ReportUpdated += AggregateBattery_ReportUpdated;
-
         }
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -41,6 +40,7 @@ namespace BatteryIcon
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Notify When Charge is Full", OnFullClicked));
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Display Charge Percentage", OnChargeClicked));
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Battery Status", OnStatusClicked));
+            _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Battery Report", OnReportClicked));
             _notifyIcon.ContextMenu.MenuItems.Add(new Forms.MenuItem("Exit", OnExitClicked));
             _notifyIcon.Visible = true;
             //create notifyIcon
@@ -55,7 +55,6 @@ namespace BatteryIcon
             abForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
             abForm.Show();
             abForm.Activate();
-            abWindowOpened();
             sendAObj(abForm);
             //if about is clicked, display About window
         }
@@ -134,8 +133,15 @@ namespace BatteryIcon
             statForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
             statForm.Show();
             statForm.Activate();
-            statWindowOpened();
             sendSObj(statForm);
+        }
+
+        private void OnReportClicked(object sender, EventArgs e)
+        {
+            Process.Start("powercfg", " /batteryreport");
+            string url = "file://C:/Windows/System32/battery-report.html";
+            Process.Start("explorer", url);
+            //generate batteryreport and open in browser
         }
 
         private void OnExitClicked(object sender, EventArgs e)
@@ -149,7 +155,7 @@ namespace BatteryIcon
 
         private void notifyIcon_MouseClick(object sender, Forms.MouseEventArgs e)
         {
-            Forms.MouseEventArgs mouseEventArgs = (Forms.MouseEventArgs)e;
+            Forms.MouseEventArgs mouseEventArgs = e;
             if (mouseEventArgs.Button == Forms.MouseButtons.Left)
             {
                 if (open == false)
@@ -159,22 +165,25 @@ namespace BatteryIcon
                     battForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
                     battForm.ShowInTaskbar = false;
                     //form.SetDesktopLocation(MousePosition.X - form.Width / 2, MousePosition.Y - form.Height - 20);
-                    battForm.Show();
-                    battForm.Activate();
-                    battWindow_Opened();
+                    if (!battForm.IsFocused)
+                    {
+                        battForm.Show();
+                        battForm.Activate();
+                    }
                     sendMObj(battForm);
 
                     //if main menu is not open and notifyIcon is clicked, open it and set bool open to true
                 }
-                else
+                else if (open == false)
                 {
                     open = false;
                     battForm.Hide();
-                    if (abForm.IsActive)
-                    {
-                        abForm.Hide();
-                    }
                     //if main menu is open and notifyIcon is clicked, hide window and set bool open to false
+                }
+                else
+                {
+                    battForm.Show();
+                    battForm.Activate();
                 }
 
             }
@@ -400,30 +409,6 @@ namespace BatteryIcon
             sendAObj(abForm);
             //first check for 100% notification, then update icons, text,
             //and send window obj to respective classes
-        }
-
-        private void battWindow_Opened()
-        {
-            DoubleAnimation animation = new DoubleAnimation(0, 1,
-                                        (Duration)TimeSpan.FromSeconds(0.15));
-            battForm.BeginAnimation(UIElement.OpacityProperty, animation);
-            //display fade animation for battery window
-        }
-
-        private void abWindowOpened()
-        {
-            DoubleAnimation animation = new DoubleAnimation(0, 1,
-                                        (Duration)TimeSpan.FromSeconds(0.10));
-            abForm.BeginAnimation(UIElement.OpacityProperty, animation);
-            //display fade animation for about window
-        }
-
-        private void statWindowOpened()
-        {
-            DoubleAnimation animation = new DoubleAnimation(0, 1,
-                                        (Duration)TimeSpan.FromSeconds(0.10));
-            statForm.BeginAnimation(UIElement.OpacityProperty, animation);
-            //display fade animation for settings window
         }
 
         public void sendMObj(MainWindow battForm)

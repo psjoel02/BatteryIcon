@@ -14,11 +14,13 @@
         WindowStyle="ToolWindow"
         WindowStartupLocation="Manual" 
         Background="#202020"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
         <TextBlock HorizontalAlignment="Left" 
                    Margin="10,10,0,0" 
                    TextWrapping="Wrap"
@@ -28,7 +30,9 @@
                    VerticalAlignment="Top"
                    Foreground="White"
                    FontWeight="Bold"/>
-
+        <Separator Margin="0,0,0,160"/>
+        
+        
         <TextBlock HorizontalAlignment="Left" 
                    Margin="16,46,0,0" 
                    TextWrapping="Wrap"
@@ -38,6 +42,7 @@
                    VerticalAlignment="Top"
                    Foreground="White"
                    FontWeight="Bold"/>
+        
 
         <TextBlock HorizontalAlignment="Left" 
                    Margin="21,75,0,0" 
@@ -58,6 +63,7 @@
                    VerticalAlignment="Top"
                    Foreground="White"
                    FontWeight="Bold"/>
+        
 
         <TextBlock HorizontalAlignment="Left" 
                    Margin="21,139,0,0" 
@@ -68,7 +74,7 @@
                    VerticalAlignment="Top"
                    Foreground="White"
                    Name="WearLevel"/>
-
+        
         <TextBlock HorizontalAlignment="Left" 
                    Margin="165,46,0,0" 
                    TextWrapping="Wrap"
@@ -78,7 +84,7 @@
                    VerticalAlignment="Top"
                    Foreground="White"
                    FontWeight="Bold"/>
-
+        
         <TextBlock HorizontalAlignment="Left" 
                    Margin="175,75,0,0" 
                    TextWrapping="Wrap"
@@ -88,7 +94,7 @@
                    VerticalAlignment="Top"
                    Foreground="White"
                    Name="DesignCapacity"/>
-
+        
         <TextBlock HorizontalAlignment="Left" 
                    Margin="165,108,0,0" 
                    TextWrapping="Wrap"
@@ -148,6 +154,6 @@
             VerticalAlignment="Top"
             Foreground="White"
             Name="CurrentCapacity"/>
-
+            
     </Grid>
 </Window>
