@@ -72,7 +72,7 @@ namespace BatteryIcon
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
-            this.Visibility = Visibility.Hidden;
+            this.Visibility = Visibility.Collapsed;
             //receive MainWindow Object and set initial slider positions and text fields
         }
     }
