@@ -138,10 +138,16 @@ namespace BatteryIcon
 
         private void OnReportClicked(object sender, EventArgs e)
         {
-            Process.Start("powercfg", " /batteryreport");
-            string url = "file://C:/Windows/System32/battery-report.html";
-            Process.Start("explorer", url);
-            //generate batteryreport and open in browser
+            string data = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory).ToString();
+            //get current user's desktop
+            Process.Start("powercfg", $" /batteryreport /output {data}/battery_report.html");
+            //save as batteryreport file on desktop
+            new ToastContentBuilder()
+            .AddArgument("action", "viewConversation")
+            .AddArgument("conversationId", 9813)
+            .AddText("Notice")
+            .AddText("Battery report has been saved to the desktop.")
+            .Show();
         }
 
         private void OnExitClicked(object sender, EventArgs e)
@@ -174,7 +180,7 @@ namespace BatteryIcon
 
                     //if main menu is not open and notifyIcon is clicked, open it and set bool open to true
                 }
-                else if (open == false)
+                else if (open == true && battForm.IsFocused)
                 {
                     open = false;
                     battForm.Hide();
