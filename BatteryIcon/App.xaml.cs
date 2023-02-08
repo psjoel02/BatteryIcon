@@ -164,33 +164,16 @@ namespace BatteryIcon
             Forms.MouseEventArgs mouseEventArgs = e;
             if (mouseEventArgs.Button == Forms.MouseButtons.Left)
             {
-                if (open == false)
-                {
                     open = true;
                     battForm.Left = SystemParameters.WorkArea.Width - 350 - 2;
                     battForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
                     battForm.ShowInTaskbar = false;
                     //form.SetDesktopLocation(MousePosition.X - form.Width / 2, MousePosition.Y - form.Height - 20);
-                    if (!battForm.IsFocused)
-                    {
-                        battForm.Show();
-                        battForm.Activate();
-                    }
+                    battForm.Show();
+                    battForm.Activate();
                     sendMObj(battForm);
 
                     //if main menu is not open and notifyIcon is clicked, open it and set bool open to true
-                }
-                else if (open == true && battForm.IsFocused)
-                {
-                    open = false;
-                    battForm.Hide();
-                    //if main menu is open and notifyIcon is clicked, hide window and set bool open to false
-                }
-                else
-                {
-                    battForm.Show();
-                    battForm.Activate();
-                }
 
             }
 

@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         AllowsTransparency="True"
         Background="Transparent"
-        LostKeyboardFocus="Window_LostKeyboardFocus">
+        Deactivated="Window_Deactivated">
     
     <Border CornerRadius="8" Background="LightSlateGray">
         <Border CornerRadius="8" Background="#202020"

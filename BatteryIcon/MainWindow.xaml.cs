@@ -210,9 +210,10 @@ namespace BatteryIcon
         }
 
 
-        private void Window_LostKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void Window_Deactivated(object sender, EventArgs e)
         {
             this.Hide();
         }
+
     }
 }
