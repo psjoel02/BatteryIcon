@@ -14,9 +14,8 @@
         MaxWidth="350"
         ResizeMode="NoResize"
         AllowsTransparency="True"
-        Background="Transparent"
-        Deactivated="Window_Deactivated">
-    
+        Background="Transparent">
+
     <Border CornerRadius="8" Background="LightSlateGray">
         <Border CornerRadius="8" Background="#202020"
             BorderBrush="White" Margin="1">

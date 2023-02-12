@@ -5,12 +5,14 @@ using System.Windows;
 using Forms = System.Windows.Forms;
 using Windows.Devices.Power;
 using System.Diagnostics;
+using Windows.ApplicationModel.Background;
+using System.Windows.Media;
 
 namespace BatteryIcon
 {
     public partial class App : Application
     {
-        private static bool open = false;
+        public static bool open = false;
         private static bool notified = false;
         //bool reportRequested = false;
 
@@ -119,11 +121,11 @@ namespace BatteryIcon
         private void OnStatusClicked(object sender, EventArgs e)
         {
             var report = RequestAggregateBatteryReport();
-            int wear = (int)((report.DesignCapacityInMilliwattHours / report.FullChargeCapacityInMilliwattHours) /
-                (report.FullChargeCapacityInMilliwattHours) * 100);
-
-            statForm.setPowerState(_pwr.PowerLineStatus.ToString());
-            statForm.setWearLevel(wear.ToString() + "%");
+            float full_charge = (float)report.FullChargeCapacityInMilliwattHours;
+            float design_charge = (float)report.DesignCapacityInMilliwattHours;
+            float wear = ((design_charge / full_charge) - 1) * 100;
+            statForm.setPowerState(_pwr.BatteryChargeStatus.ToString());
+            statForm.setWearLevel(wear.ToString("0.00") + "%");
             statForm.setRate(report.ChargeRateInMilliwatts.ToString() + " mW");
             statForm.setDesignCapacity(report.DesignCapacityInMilliwattHours.ToString() + " mWh");
             statForm.setFullyChargedCapacity(report.FullChargeCapacityInMilliwattHours.ToString() + " mWh");
@@ -161,9 +163,11 @@ namespace BatteryIcon
 
         private void notifyIcon_MouseClick(object sender, Forms.MouseEventArgs e)
         {
-            Forms.MouseEventArgs mouseEventArgs = e;
+            Forms.MouseEventArgs mouseEventArgs = (Forms.MouseEventArgs)e;
             if (mouseEventArgs.Button == Forms.MouseButtons.Left)
             {
+                if (open == false)
+                {
                     open = true;
                     battForm.Left = SystemParameters.WorkArea.Width - 350 - 2;
                     battForm.Top = SystemParameters.WorkArea.Height - 270 - 2;
@@ -174,6 +178,17 @@ namespace BatteryIcon
                     sendMObj(battForm);
 
                     //if main menu is not open and notifyIcon is clicked, open it and set bool open to true
+                }
+                else
+                {
+                    open = false;
+                    battForm.Hide();
+                    if (abForm.IsActive)
+                    {
+                        abForm.Hide();
+                    }
+                    //if main menu is open and notifyIcon is clicked, hide window and set bool open to false
+                }
 
             }
 
@@ -274,7 +289,7 @@ namespace BatteryIcon
                 Bitmap bmp = new Bitmap(18, 18);
                 RectangleF rectf = new RectangleF(2, 2, 32, 32);
                 Graphics g = Graphics.FromImage(bmp);
-                g.DrawString(Batterylife.ToString(), new Font("segoeui", 7), Brushes.White, rectf);
+                g.DrawString(Batterylife.ToString(), new Font("segoeui", 7), System.Drawing.Brushes.White, rectf);
                 Forms.PictureBox pictureBox1 = new Forms.PictureBox();
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;
@@ -417,5 +432,6 @@ namespace BatteryIcon
             statForm.receive(statForm);
             //send status window to status c# file
         }
+
     }
 }

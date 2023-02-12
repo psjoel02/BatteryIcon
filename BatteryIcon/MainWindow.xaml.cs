@@ -6,6 +6,8 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Toolkit.Uwp.Notifications;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BatteryIcon
 {
@@ -13,7 +15,7 @@ namespace BatteryIcon
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         private static int brightness;
         private static PowerStatus _pwr = SystemInformation.PowerStatus;
@@ -209,11 +211,6 @@ namespace BatteryIcon
             });
         }
 
-
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            this.Hide();
-        }
 
     }
 }
