@@ -1,12 +1,13 @@
-﻿using Microsoft.Toolkit.Uwp.Notifications;
+﻿using Microsoft.Win32;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Drawing;
 using System.Windows;
 using Forms = System.Windows.Forms;
 using Windows.Devices.Power;
 using System.Diagnostics;
-using Windows.ApplicationModel.Background;
-using System.Windows.Media;
+using Windows.System.Power;
+using System.Runtime.InteropServices;
 
 namespace BatteryIcon
 {
@@ -22,7 +23,6 @@ namespace BatteryIcon
         private MainWindow battForm = new MainWindow();
         private About abForm = new About();
         private Status statForm = new Status();
-
 
         public App()
         {
@@ -215,17 +215,13 @@ namespace BatteryIcon
                     battForm.SetIcon("Resources\\charging.ico");
                 }
                 else
-                {
+                {   
                     switch (Batterylife)
                     {
+                        
                         case int val when (val >= 98):
                             _notifyIcon.Icon = new Icon("Resources\\full.ico");
                             battForm.SetIcon("Resources\\full.ico");
-                            break;
-
-                        case int val when (val >= 80 && val <= 97):
-                            _notifyIcon.Icon = new Icon("Resources\\high.ico");
-                            battForm.SetIcon("Resources\\high.ico");
                             break;
 
                         case int val when (val >= 80 && val <= 97):
@@ -289,7 +285,24 @@ namespace BatteryIcon
                 Bitmap bmp = new Bitmap(18, 18);
                 RectangleF rectf = new RectangleF(2, 2, 32, 32);
                 Graphics g = Graphics.FromImage(bmp);
-                g.DrawString(Batterylife.ToString(), new Font("segoeui", 7), System.Drawing.Brushes.White, rectf);
+                try
+                {
+                    int res = (int)Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "AppsUseLightTheme", -1);
+                    if(res == 0)
+                    {
+                        g.DrawString(Batterylife.ToString(), new Font("segoeui", 7), Brushes.White, rectf);
+                    }       
+                    else if(res == 1)
+                    {
+                        
+                        g.DrawString(Batterylife.ToString(), new Font("segoeui", 7), Brushes.Black, rectf);
+                    }
+                }
+                catch
+                {
+                    g.DrawString(Batterylife.ToString(), new Font("segoeui", 7), Brushes.White, rectf);
+                }
+               
                 Forms.PictureBox pictureBox1 = new Forms.PictureBox();
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;

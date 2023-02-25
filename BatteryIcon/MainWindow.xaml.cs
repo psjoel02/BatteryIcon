@@ -6,8 +6,6 @@ using System.Windows.Interop;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Microsoft.Toolkit.Uwp.Notifications;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace BatteryIcon
 {
